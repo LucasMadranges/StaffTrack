@@ -1,0 +1,53 @@
+services:
+  app-web-stafftrack:
+    image: node:22
+    container_name: app-web-stafftrack
+    working_dir: /src
+    volumes:
+      - ./AppWeb:/src
+    ports:
+      - "4200:4200"
+    command: sh -c "npm install && npm run start"
+    depends_on:
+      - nestjs-api
+      - postgres-db
+    env_file:
+      - ./AppWeb/.env.local
+    networks:
+      - networkStaffTrack
+
+  api-stafftrack:
+    image: node:22
+    container_name: api-stafftrack
+    working_dir: /app
+    volumes:
+      - ./API:/app
+    ports:
+      - "4000:4000"
+    command: sh -c "npm install && npm run start:dev"
+    depends_on:
+      - db-stafftrack
+    env_file:
+      - ./API/.env
+    networks:
+      - networkStaffTrack
+
+  db-stafftrack:
+    image: postgres:13
+    container_name: db-stafftrack
+    env_file:
+      - ./DB/.env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - networkStaffTrack
+
+volumes:
+  postgres-data:
+
+networks:
+  networkStaffTrack:
+    driver: bridge
+    name: networkStaffTrack
