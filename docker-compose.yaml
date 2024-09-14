@@ -7,7 +7,7 @@ services:
       - ./AppWeb:/src
     ports:
       - "4200:4200"
-    command: sh -c "npm install && npm run start"
+    command: sh -c "npm install && npm install -g @angular/cli && ng serve --host 0.0.0.0 --disable-host-check"
     depends_on:
       - api-stafftrack
       - db-stafftrack
